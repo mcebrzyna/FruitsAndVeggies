@@ -1,3 +1,6 @@
+@import "./cart";
+@import "./search";
+
 header{
   position: fixed;
   top: 0;
@@ -12,6 +15,7 @@ header{
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     height: 100px;
   }
   .logo{
@@ -19,52 +23,5 @@ header{
     font-size: 40px;
     font-family: 'Rubik', sans-serif;
     letter-spacing: 3px;
-    margin: 0 60px 0 0;
-  }
-  .search-area{
-    position: relative;
-    form{
-      display: flex;
-      align-items: center;
-    }
-    .text-input{
-      height: 35px;
-      width: 350px;
-      border: 2px solid $main-color;
-      padding: 0 0 0 10px;
-    }
-    .submit-btn{
-      height: 35px;
-      width: 90px;
-      background: $main-color url("/FruitsAndVeggies/img/search.svg") no-repeat center;
-      background-size: 20px 20px;
-      border: none;
-    }
-  }
-  .shopping-cart{
-    display: flex;
-    align-items: center;
-    margin: 0 0 0 auto;
-    font-size: 14px;
-    div:not(.cart-icon){
-      display: flex;
-      flex-direction: column;
-      span{
-        color: $main-color;
-        margin: 0 0 0 auto;
-      }
-    }
-    div:nth-of-type(2){
-      margin: 0 0 0 10px;
-      span{
-        font-weight: 600;
-      }
-    }
-    .cart-icon{
-      height: 40px;
-      width: 40px;
-      background-image: url("/FruitsAndVeggies/img/shop.svg");
-      margin: 0 0 0 20px;
-    }
   }
 }

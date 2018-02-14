@@ -13,7 +13,7 @@ class Item extends React.Component{
                     <input/>
                     <button className='plus'/>
                 </div>
-                <input type='submit' value='ADD TO CART'/>
+                <button className='addToCart-btn'>ADD TO CART</button>
             </div>
         )
     }
