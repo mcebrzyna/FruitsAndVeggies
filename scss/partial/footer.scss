@@ -1,0 +1,11 @@
+footer{
+  background: $second-color;
+  .main-width{
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: darken($second-color, 50%);
+    font-size: 14px;
+  }
+}
