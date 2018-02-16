@@ -1,0 +1,64 @@
+{
+  "products": [
+    {
+      "name": "Onion - 1kg",
+      "price": "0,50",
+      "src": "/FruitsAndVeggies/img/products/onion.jpg",
+      "id": 1
+    },
+    {
+      "name": "Tomato - 1kg",
+      "price": "3,99",
+      "src": "/FruitsAndVeggies/img/products/tomato.jpg",
+      "id": 2
+    },
+    {
+      "name": "Pepper",
+      "price": "6,25",
+      "src": "/FruitsAndVeggies/img/products/pepper.jpg",
+      "id": 3
+    },
+    {
+      "name": "Orange - 1kg",
+      "price": "5,99",
+      "src": "/FruitsAndVeggies/img/products/orange.jpg",
+      "id": 4
+    },
+    {
+      "name": "Carrot - 1kg",
+      "price": "1,20",
+      "src": "/FruitsAndVeggies/img/products/carrot.jpg",
+      "id": 5
+    },
+    {
+      "name": "Banana - 1kg",
+      "price": "4,99",
+      "src": "/FruitsAndVeggies/img/products/banana.jpg",
+      "id": 6
+    },
+    {
+      "name": "Strawberry - 1kg",
+      "price": "8,10",
+      "src": "/FruitsAndVeggies/img/products/strawberry.jpg",
+      "id": 7
+    },
+    {
+      "name": "Potato - 1kg",
+      "price": "1,59",
+      "src": "/FruitsAndVeggies/img/products/potato.jpg",
+      "id": 8
+    },
+    {
+      "name": "Garlic",
+      "price": "1,59",
+      "src": "/FruitsAndVeggies/img/products/garlic.jpg",
+      "id": 9
+    },
+    {
+      "name": "Apple - 1kg",
+      "price": "3,29",
+      "src": "/FruitsAndVeggies/img/products/apple.jpg",
+      "id": 10
+    }
+  ]
+}
