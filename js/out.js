@@ -9648,7 +9648,10 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = App.__proto__ || Object.getPrototypeOf(App)).call.apply(_ref, [this].concat(args))), _this), _this.url = 'http://localhost:3000/products', _this.state = {
-                products: null
+                products: null,
+                text: ''
+            }, _this.handleText = function (ev) {
+                _this.setState({ text: ev.target.value });
             }, _temp), _possibleConstructorReturn(_this, _ret);
         }
 
@@ -9676,8 +9679,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 return _react2.default.createElement(
                     'div',
                     { className: 'main-container' },
-                    _react2.default.createElement(_header2.default, null),
-                    _react2.default.createElement(_content2.default, { products: this.state.products }),
+                    _react2.default.createElement(_header2.default, { text: this.state.text, handleText: this.handleText }),
+                    _react2.default.createElement(_content2.default, { products: this.state.products, text: this.state.text }),
                     _react2.default.createElement(_footer2.default, null)
                 );
             }
@@ -22858,7 +22861,7 @@ var Header = function (_React$Component) {
                         { className: 'logo' },
                         'Veggy'
                     ),
-                    _react2.default.createElement(_search2.default, null),
+                    _react2.default.createElement(_search2.default, { text: this.props.text, handleText: this.props.handleText }),
                     _react2.default.createElement(_cart2.default, null)
                 )
             );
@@ -22913,7 +22916,10 @@ var Search = function (_React$Component) {
                 _react2.default.createElement(
                     'form',
                     null,
-                    _react2.default.createElement('input', { className: 'text-input', type: 'text', placeholder: 'Search for Vegetables and Fruits' }),
+                    _react2.default.createElement('input', { className: 'text-input',
+                        value: this.props.text,
+                        onChange: this.props.handleText,
+                        placeholder: 'Search for Vegetables and Fruits' }),
                     _react2.default.createElement('input', { className: 'submit-btn', type: 'submit', value: '' })
                 )
             );
@@ -23139,9 +23145,15 @@ var Content = function (_React$Component) {
     _createClass(Content, [{
         key: 'loadItems',
         value: function loadItems() {
-            return this.props.products.map(function (i) {
-                return _react2.default.createElement(_item2.default, { name: i.name, price: i.price, src: i.src, key: i.id });
+            var items = [];
+            var text = this.props.text.toLowerCase();
+
+            this.props.products.forEach(function (i) {
+                if (i.name.toLowerCase().indexOf(text) !== -1) {
+                    items.push(_react2.default.createElement(_item2.default, { name: i.name, price: i.price, src: i.src, key: i.id }));
+                }
             });
+            return items;
         }
     }, {
         key: 'render',

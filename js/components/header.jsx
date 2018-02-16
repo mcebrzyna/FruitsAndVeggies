@@ -9,7 +9,7 @@ class Header extends React.Component{
             <header>
                 <div className='main-width'>
                     <span className='logo'>Veggy</span>
-                    <Search />
+                    <Search text={this.props.text} handleText={this.props.handleText}/>
                     <Cart />
                 </div>
             </header>

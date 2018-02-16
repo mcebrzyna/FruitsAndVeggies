@@ -11,6 +11,11 @@ document.addEventListener('DOMContentLoaded', function () {
         url = 'http://localhost:3000/products';
         state = {
             products: null,
+            text: '',
+        };
+
+        handleText = ev => {
+            this.setState({text: ev.target.value});
         };
 
         componentDidMount() {
@@ -28,8 +33,8 @@ document.addEventListener('DOMContentLoaded', function () {
         render(){
             return (
                 <div className='main-container'>
-                    <Header />
-                    <Content products={this.state.products}/>
+                    <Header text={this.state.text} handleText={this.handleText}/>
+                    <Content products={this.state.products} text={this.state.text}/>
                     <Footer />
                 </div>
             )
