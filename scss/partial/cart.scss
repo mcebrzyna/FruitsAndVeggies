@@ -25,6 +25,9 @@
       background: url("/FruitsAndVeggies/img/shop.svg") no-repeat center;
       margin: 0 0 0 20px;
       cursor: pointer;
+      &:hover{
+        transform: scale(1.1);
+      }
     }
   }
   .cart-container{
@@ -66,10 +69,11 @@
     }
     .cart-items{
       overflow: auto;
-      height: 100%;
+      height: calc(100% - 40px);
     }
     input{
       height: 40px;
+      width: 100%;
       background: #eaa833;
       border: none;
       color: white;
