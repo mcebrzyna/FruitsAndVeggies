@@ -1,16 +1,14 @@
 .search-area{
   position: relative;
-  form{
-    display: flex;
-    align-items: center;
-  }
+  display: flex;
+  align-items: center;
   .text-input{
     height: 35px;
     width: 350px;
     border: 2px solid $main-color;
     padding: 0 0 0 10px;
   }
-  .submit-btn{
+  div{
     height: 35px;
     width: 90px;
     background: $main-color url("/FruitsAndVeggies/img/search.svg") no-repeat center;
