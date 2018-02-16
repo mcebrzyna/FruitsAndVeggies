@@ -11,6 +11,17 @@ class Content extends React.Component{
                 items.push(<Item name={i.name} price={i.price} src={i.src} key={i.id}/>)
             }
         });
+
+        if(items.length === 0){
+            return (
+                <div className='noMatch'>
+                    <img src='/FruitsAndVeggies/img/tree.svg'/>
+                    <div>Sorry, no products matched your search!</div>
+                    <div>Enter a different keyword and try.</div>
+                </div>
+            )
+        }
+
         return items;
     }
 
