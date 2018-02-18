@@ -9649,9 +9649,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
             return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = App.__proto__ || Object.getPrototypeOf(App)).call.apply(_ref, [this].concat(args))), _this), _this.url = 'http://localhost:3000/products', _this.state = {
                 products: null,
-                text: ''
+                text: '',
+                cart: []
             }, _this.handleText = function (ev) {
                 _this.setState({ text: ev.target.value });
+            }, _this.sendToCart = function (name, amount, price) {
+                //check if adding item has already appeared
+                var tempList = _this.state.cart;
+                var appear = false;
+                amount = Number(amount);
+                tempList.forEach(function (item) {
+                    if (item.name === name) {
+                        item.amount += Number(amount);
+                        appear = true;
+                    }
+                });
+
+                //if first appearance
+                !appear ? tempList.push({ name: name, amount: amount, price: price }) : '';
+
+                _this.setState({
+                    cart: tempList
+                });
             }, _temp), _possibleConstructorReturn(_this, _ret);
         }
 
@@ -9679,8 +9698,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 return _react2.default.createElement(
                     'div',
                     { className: 'main-container' },
-                    _react2.default.createElement(_header2.default, { text: this.state.text, handleText: this.handleText }),
-                    _react2.default.createElement(_content2.default, { products: this.state.products, text: this.state.text }),
+                    _react2.default.createElement(_header2.default, { text: this.state.text, cart: this.state.cart, handleText: this.handleText }),
+                    _react2.default.createElement(_content2.default, { products: this.state.products, text: this.state.text, sendToCart: this.sendToCart }),
                     _react2.default.createElement(_footer2.default, null)
                 );
             }
@@ -22862,7 +22881,7 @@ var Header = function (_React$Component) {
                         'Veggy'
                     ),
                     _react2.default.createElement(_search2.default, { text: this.props.text, handleText: this.props.handleText }),
-                    _react2.default.createElement(_cart2.default, null)
+                    _react2.default.createElement(_cart2.default, { cart: this.props.cart })
                 )
             );
         }
@@ -22974,6 +22993,33 @@ var Cart = function (_React$Component) {
             } else {
                 _this.setState({ menuDisplay: 'off' });
             }
+        }, _this.addToCart = function () {
+            if (typeof _this.props.cart === 'undefined') {
+                return null;
+            }
+
+            return _this.props.cart.map(function (item) {
+                return _react2.default.createElement(
+                    'div',
+                    { key: item.name },
+                    _react2.default.createElement(
+                        'div',
+                        null,
+                        item.name
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        null,
+                        item.amount
+                    )
+                );
+            });
+        }, _this.countTotal = function () {
+            var total = 0;
+            _this.props.cart.forEach(function (item) {
+                total += item.amount * parseFloat(item.price);
+            });
+            return Math.round(total * 100) / 100;
         }, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
@@ -23006,12 +23052,12 @@ var Cart = function (_React$Component) {
                         _react2.default.createElement(
                             'span',
                             null,
-                            '7'
+                            this.props.cart.length
                         ),
                         _react2.default.createElement(
                             'span',
                             null,
-                            '357'
+                            this.countTotal()
                         )
                     ),
                     _react2.default.createElement('div', { className: 'cart-icon', onClick: this.handleClick })
@@ -23020,11 +23066,7 @@ var Cart = function (_React$Component) {
                     'div',
                     { className: 'cart-container',
                         style: this.state.menuDisplay === 'on' ? { display: 'block' } : { display: 'none' } },
-                    _react2.default.createElement(
-                        'div',
-                        { className: 'cart-items' },
-                        'Empty'
-                    ),
+                    this.addToCart(),
                     _react2.default.createElement('input', { type: 'submit', value: 'PROCEED TO CHECKOUT' })
                 )
             );
@@ -23141,15 +23183,18 @@ var Content = function (_React$Component) {
     _createClass(Content, [{
         key: 'loadItems',
         value: function loadItems() {
+            var _this2 = this;
+
             var items = [];
             var text = this.props.text.toLowerCase();
 
             this.props.products.forEach(function (i) {
                 if (i.name.toLowerCase().indexOf(text) !== -1) {
-                    items.push(_react2.default.createElement(_item2.default, { name: i.name, price: i.price, src: i.src, key: i.id }));
+                    items.push(_react2.default.createElement(_item2.default, { name: i.name, price: i.price, src: i.src, key: i.id, sendToCart: _this2.props.sendToCart }));
                 }
             });
 
+            //if no matches
             if (items.length === 0) {
                 return _react2.default.createElement(
                     'div',
@@ -23246,12 +23291,16 @@ var Item = function (_React$Component) {
         }, _this.handlePlus = function () {
             var currAmount = _this.state.amount;
             _this.setState({ amount: ++currAmount });
+        }, _this.handleChange = function (ev) {
+            _this.setState({ amount: ev.target.value });
         }, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
     _createClass(Item, [{
         key: 'render',
         value: function render() {
+            var _this2 = this;
+
             return _react2.default.createElement(
                 'div',
                 { className: 'item' },
@@ -23271,12 +23320,16 @@ var Item = function (_React$Component) {
                     'div',
                     { className: 'amount-area' },
                     _react2.default.createElement('button', { className: 'minus', onClick: this.handleMinus }),
-                    _react2.default.createElement('input', { value: this.state.amount }),
+                    _react2.default.createElement('input', { value: this.state.amount, onChange: this.handleChange }),
                     _react2.default.createElement('button', { className: 'plus', onClick: this.handlePlus })
                 ),
                 _react2.default.createElement(
                     'button',
-                    { className: 'addToCart-btn' },
+                    { className: 'addToCart-btn',
+                        onClick: function onClick() {
+                            return _this2.props.sendToCart(_this2.props.name, _this2.state.amount, _this2.props.price);
+                        },
+                        'data-name': this.props.name },
                     'ADD TO CART'
                 )
             );

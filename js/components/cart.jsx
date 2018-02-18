@@ -14,6 +14,29 @@ class Cart extends React.Component{
         }
     };
 
+    addToCart = () => {
+        if(typeof this.props.cart === 'undefined'){
+            return null;
+        }
+
+        return this.props.cart.map(item => {
+            return (
+                <div key={item.name}>
+                    <div>{item.name}</div>
+                    <div>{item.amount}</div>
+                </div>
+            )
+        });
+    };
+
+    countTotal = () => {
+        let total = 0;
+        this.props.cart.forEach(item => {
+            total += item.amount * parseFloat(item.price);
+        });
+        return Math.round(total * 100) / 100;
+    };
+
     render(){
         return (
             <div className='shopping-cart'>
@@ -23,14 +46,14 @@ class Cart extends React.Component{
                         <span>Sub Total :</span>
                     </div>
                     <div>
-                        <span>7</span>
-                        <span>357</span>
+                        <span>{this.props.cart.length}</span>
+                        <span>{this.countTotal()}</span>
                     </div>
                     <div className='cart-icon' onClick={this.handleClick}/>
                 </div>
                 <div className='cart-container'
                      style={this.state.menuDisplay === 'on'? {display: 'block'} : {display: 'none'}}>
-                    <div className='cart-items'>Empty</div>
+                    {this.addToCart()}
                     <input type="submit" value='PROCEED TO CHECKOUT'/>
                 </div>
             </div>

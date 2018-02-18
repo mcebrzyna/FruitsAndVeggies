@@ -8,10 +8,11 @@ class Content extends React.Component{
 
         this.props.products.forEach( i => {
             if(i.name.toLowerCase().indexOf(text) !== -1){
-                items.push(<Item name={i.name} price={i.price} src={i.src} key={i.id}/>)
+                items.push(<Item name={i.name} price={i.price} src={i.src} key={i.id} sendToCart={this.props.sendToCart}/>)
             }
         });
 
+        //if no matches
         if(items.length === 0){
             return (
                 <div className='noMatch'>

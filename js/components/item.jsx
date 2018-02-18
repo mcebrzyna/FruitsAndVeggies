@@ -17,6 +17,10 @@ class Item extends React.Component{
         this.setState({ amount: ++currAmount})
     };
 
+    handleChange = (ev) => {
+        this.setState({amount: ev.target.value})
+    };
+
     render(){
         return (
             <div className='item'>
@@ -25,10 +29,12 @@ class Item extends React.Component{
                 <div className='item-price'>{this.props.price} PLN</div>
                 <div className='amount-area'>
                     <button className='minus' onClick={this.handleMinus}/>
-                    <input value={this.state.amount}/>
+                    <input value={this.state.amount} onChange={this.handleChange}/>
                     <button className='plus' onClick={this.handlePlus}/>
                 </div>
-                <button className='addToCart-btn'>ADD TO CART</button>
+                <button className='addToCart-btn'
+                        onClick={() => this.props.sendToCart(this.props.name, this.state.amount, this.props.price)}
+                        data-name={this.props.name}>ADD TO CART</button>
             </div>
         )
     }

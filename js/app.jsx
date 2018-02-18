@@ -12,10 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
         state = {
             products: null,
             text: '',
-        };
-
-        handleText = ev => {
-            this.setState({text: ev.target.value});
+            cart: [],
         };
 
         componentDidMount() {
@@ -30,11 +27,35 @@ document.addEventListener('DOMContentLoaded', function () {
                 .catch(error => console.log(error))
         }
 
+        handleText = ev => {
+            this.setState({text: ev.target.value});
+        };
+
+        sendToCart = (name, amount, price) => {
+            //check if adding item has already appeared
+            let tempList = this.state.cart;
+            let appear = false;
+            amount = Number(amount);
+            tempList.forEach(item => {
+                if(item.name === name){
+                    item.amount += Number(amount);
+                    appear = true;
+                }
+            });
+
+            //if first appearance
+            !appear ? tempList.push({name, amount, price}) : '';
+
+            this.setState({
+                cart: tempList,
+            })
+        };
+
         render(){
             return (
                 <div className='main-container'>
-                    <Header text={this.state.text} handleText={this.handleText}/>
-                    <Content products={this.state.products} text={this.state.text}/>
+                    <Header text={this.state.text} cart={this.state.cart} handleText={this.handleText}/>
+                    <Content products={this.state.products} text={this.state.text} sendToCart={this.sendToCart}/>
                     <Footer />
                 </div>
             )

@@ -10,7 +10,7 @@ class Header extends React.Component{
                 <div className='main-width'>
                     <span className='logo'>Veggy</span>
                     <Search text={this.props.text} handleText={this.props.handleText}/>
-                    <Cart />
+                    <Cart cart={this.props.cart}/>
                 </div>
             </header>
         )
