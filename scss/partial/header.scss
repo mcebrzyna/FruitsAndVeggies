@@ -15,7 +15,6 @@ header{
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
     height: 100px;
   }
   .logo{
@@ -23,5 +22,6 @@ header{
     font-size: 40px;
     font-family: 'Rubik', sans-serif;
     letter-spacing: 3px;
+    margin: 0 50px 0 0;
   }
 }

@@ -1,83 +1,39 @@
+@import "./cartBox";
+
 .shopping-cart{
   position: relative;
+  margin: 0 0 0 auto;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
   .cart-info{
-    min-width: fit-content;
     display: flex;
-    align-items: center;
-    font-size: 14px;
-    div:not(.cart-icon){
-      display: flex;
-      flex-direction: column;
-      span{
-        color: $main-color;
-        margin: 0 0 0 auto;
-      }
+    flex-direction: column;
+    width: max-content;
+    span{
+      color: $main-color;
+      margin: 0 0 0 auto;
     }
-    div:nth-of-type(2){
-      margin: 0 0 0 10px;
-      span{
+    &:nth-of-type(2) {
+      width: 45px;
+      span {
         font-weight: 600;
       }
     }
-    .cart-icon{
-      height: 40px;
-      width: 40px;
-      background: url("/FruitsAndVeggies/img/shop.svg") no-repeat center;
-      margin: 0 0 0 20px;
-      cursor: pointer;
-      &:hover{
-        transform: scale(1.1);
-      }
+  }
+  .cart-icon{
+    height: 40px;
+    width: 40px;
+    border: none;
+    outline: none;
+    background: url("/FruitsAndVeggies/img/shop.svg") no-repeat center;
+    margin: 0 0 0 20px;
+    cursor: pointer;
+    &:hover{
+      transform: scale(1.1);
     }
   }
-  .cart-container{
-    width: 320px;
-    height: 380px;
-    position: absolute;
-    background: white;
-    top:55px;
-    right: 0;
-    -webkit-box-shadow: 1px 1px 5px 0 #858585;
-    -moz-box-shadow: 1px 1px 5px 0 #858585;
-    box-shadow: 1px 1px 5px 0 #858585;
-    padding: 15px;
+  .cart-icon:focus ~ .cart-box, .cart-box:hover{
     display: flex;
-    flex-direction: column;
-    &::before {
-      content: '';
-      display: block;
-      position: absolute;
-      background: white;
-      height: 10px;
-      width: 10px;
-      transform: rotate(45deg);
-      top: -6px;
-      right: 15px;
-      -webkit-box-shadow: 1px 1px 5px 0 #858585;
-      -moz-box-shadow: 1px 1px 5px 0 #858585;
-      box-shadow: 1px 1px 5px 0 #858585;
-    }
-    &::after{
-      content: '';
-      display: block;
-      position: absolute;
-      background: white;
-      height: 10px;
-      width: 20px;
-      top: 0;
-      right: 10px;
-    }
-    .cart-items{
-      overflow: auto;
-      height: calc(100% - 40px);
-    }
-    input{
-      height: 40px;
-      width: 100%;
-      background: #eaa833;
-      border: none;
-      color: white;
-    }
-
   }
 }

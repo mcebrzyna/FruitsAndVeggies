@@ -9650,10 +9650,11 @@ document.addEventListener('DOMContentLoaded', function () {
             return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = App.__proto__ || Object.getPrototypeOf(App)).call.apply(_ref, [this].concat(args))), _this), _this.url = 'http://localhost:3000/products', _this.state = {
                 products: null,
                 text: '',
-                cart: []
+                cart: [],
+                subTotal: 0
             }, _this.handleText = function (ev) {
                 _this.setState({ text: ev.target.value });
-            }, _this.sendToCart = function (name, amount, price) {
+            }, _this.sendToCart = function (name, amount, price, src) {
                 //check if adding item has already appeared
                 var tempList = _this.state.cart;
                 var appear = false;
@@ -9666,11 +9667,73 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 //if first appearance
-                !appear ? tempList.push({ name: name, amount: amount, price: price }) : '';
+                !appear ? tempList.push({ name: name, amount: amount, price: price, src: src }) : '';
 
                 _this.setState({
                     cart: tempList
+                }, function () {
+                    return _this.countTotal();
                 });
+            }, _this.handleMinus = function (name) {
+                var tempCart = _this.state.cart;
+                tempCart.forEach(function (item) {
+                    if (item.name === name) {
+                        item.amount > 1 ? item.amount-- : '';
+                    }
+                });
+
+                _this.setState({
+                    cart: tempCart
+                }, function () {
+                    return _this.countTotal();
+                });
+            }, _this.handlePlus = function (name) {
+                var tempCart = _this.state.cart;
+                tempCart.forEach(function (item) {
+                    if (item.name === name) {
+                        item.amount++;
+                    }
+                });
+
+                _this.setState({
+                    cart: tempCart
+                }, function () {
+                    return _this.countTotal();
+                });
+            }, _this.handleChange = function (ev, name) {
+                var tempCart = _this.state.cart;
+                tempCart.forEach(function (item) {
+                    if (item.name === name) {
+                        item.amount = ev.target.value;
+                    }
+                });
+
+                _this.setState({
+                    cart: tempCart
+                }, function () {
+                    return _this.countTotal();
+                });
+            }, _this.removeItem = function (name) {
+                var tempCart = _this.state.cart.filter(function (item) {
+                    return item.name !== name;
+                });
+                _this.setState({ cart: tempCart }, function () {
+                    return _this.countTotal();
+                });
+            }, _this.countTotal = function () {
+                var total = 0;
+                _this.state.cart.forEach(function (item) {
+                    total += item.amount * parseFloat(item.price);
+                });
+                total = Math.round(total * 100) / 100;
+
+                //adding 0 when: 11.2 -> 11.20
+                total = total.toString();
+                if (total.slice(total.indexOf('.')).length === 2) {
+                    total += '0';
+                }
+
+                _this.setState({ subTotal: total });
             }, _temp), _possibleConstructorReturn(_this, _ret);
         }
 
@@ -9698,8 +9761,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 return _react2.default.createElement(
                     'div',
                     { className: 'main-container' },
-                    _react2.default.createElement(_header2.default, { text: this.state.text, cart: this.state.cart, handleText: this.handleText }),
-                    _react2.default.createElement(_content2.default, { products: this.state.products, text: this.state.text, sendToCart: this.sendToCart }),
+                    _react2.default.createElement(_header2.default, { text: this.state.text,
+                        cart: this.state.cart,
+                        subTotal: this.state.subTotal,
+                        handleText: this.handleText,
+                        handleMinus: this.handleMinus,
+                        handlePlus: this.handlePlus,
+                        handleChange: this.handleChange,
+                        removeItem: this.removeItem }),
+                    _react2.default.createElement(_content2.default, { products: this.state.products,
+                        text: this.state.text,
+                        sendToCart: this.sendToCart
+                    }),
                     _react2.default.createElement(_footer2.default, null)
                 );
             }
@@ -9751,7 +9824,7 @@ exports = module.exports = __webpack_require__(85)(false);
 
 
 // module
-exports.push([module.i, "/*\n\tHTML5 Reset :: style.css\n\t----------------------------------------------------------\n\tWe have learned much from/been inspired by/taken code where offered from:\n\tEric Meyer\t\t\t\t\t:: http://meyerweb.com\n\tHTML5 Doctor\t\t\t\t:: http://html5doctor.com\n\tand the HTML5 Boilerplate\t:: http://html5boilerplate.com\n-------------------------------------------------------------------------------*/\n/* Let's default this puppy out\n-------------------------------------------------------------------------------*/\nhtml, body, body div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, figure, footer, header, menu, nav, section, time, mark, audio, video, details, summary {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font-weight: normal;\n  vertical-align: baseline;\n  background: transparent; }\n\nmain, article, aside, figure, footer, header, nav, section, details, summary {\n  display: block; }\n\n/* Handle box-sizing while better addressing child elements:\n   http://css-tricks.com/inheriting-box-sizing-probably-slightly-better-best-practice/ */\nhtml {\n  box-sizing: border-box; }\n\n*,\n*:before,\n*:after {\n  box-sizing: inherit; }\n\n/* consider resetting the default cursor: https://gist.github.com/murtaugh/5247154 */\n/* Responsive images and other embedded objects */\n/* if you don't have full control over `img` tags (if you have to overcome attributes), consider adding height: auto */\nimg,\nobject,\nembed {\n  max-width: 100%; }\n\n/*\n   Note: keeping IMG here will cause problems if you're using foreground images as sprites.\n\tIn fact, it *will* cause problems with Google Maps' controls at small size.\n\tIf this is the case for you, try uncommenting the following:\n#map img {\n\t\tmax-width: none;\n}\n*/\n/* force a vertical scrollbar to prevent a jumpy page */\nhtml {\n  overflow-y: scroll; }\n\n/* we use a lot of ULs that aren't bulleted.\n\tyou'll have to restore the bullets within content,\n\twhich is fine because they're probably customized anyway */\nul {\n  list-style: none; }\n\nblockquote, q {\n  quotes: none; }\n\nblockquote:before,\nblockquote:after,\nq:before,\nq:after {\n  content: '';\n  content: none; }\n\na {\n  margin: 0;\n  padding: 0;\n  font-size: 100%;\n  vertical-align: baseline;\n  background: transparent; }\n\ndel {\n  text-decoration: line-through; }\n\nabbr[title], dfn[title] {\n  border-bottom: 1px dotted #000;\n  cursor: help; }\n\n/* tables still need cellspacing=\"0\" in the markup */\ntable {\n  border-collapse: separate;\n  border-spacing: 0; }\n\nth {\n  font-weight: bold;\n  vertical-align: bottom; }\n\ntd {\n  font-weight: normal;\n  vertical-align: top; }\n\nhr {\n  display: block;\n  height: 1px;\n  border: 0;\n  border-top: 1px solid #ccc;\n  margin: 1em 0;\n  padding: 0; }\n\ninput, select {\n  vertical-align: middle; }\n\npre {\n  white-space: pre;\n  /* CSS2 */\n  white-space: pre-wrap;\n  /* CSS 2.1 */\n  white-space: pre-line;\n  /* CSS 3 (and 2.1 as well, actually) */\n  word-wrap: break-word;\n  /* IE */ }\n\ninput[type=\"radio\"] {\n  vertical-align: text-bottom; }\n\ninput[type=\"checkbox\"] {\n  vertical-align: bottom; }\n\n.ie7 input[type=\"checkbox\"] {\n  vertical-align: baseline; }\n\n.ie6 input {\n  vertical-align: text-bottom; }\n\nselect, input, textarea {\n  font: 99% sans-serif; }\n\ntable {\n  font-size: inherit;\n  font: 100%; }\n\nsmall {\n  font-size: 85%; }\n\nstrong {\n  font-weight: bold; }\n\ntd, td img {\n  vertical-align: top; }\n\n/* Make sure sup and sub don't mess with your line-heights http://gist.github.com/413930 */\nsub, sup {\n  font-size: 75%;\n  line-height: 0;\n  position: relative; }\n\nsup {\n  top: -0.5em; }\n\nsub {\n  bottom: -0.25em; }\n\n/* standardize any monospaced elements */\npre, code, kbd, samp {\n  font-family: monospace, sans-serif; }\n\n/* hand cursor on clickable elements */\n.clickable,\nlabel,\ninput[type=button],\ninput[type=submit],\ninput[type=file],\nbutton {\n  cursor: pointer; }\n\n/* Webkit browsers add a 2px margin outside the chrome of form elements */\nbutton, input, select, textarea {\n  margin: 0; }\n\n/* make buttons play nice in IE */\nbutton,\ninput[type=button] {\n  width: auto;\n  overflow: visible; }\n\n/* scale images in IE7 more attractively */\n.ie7 img {\n  -ms-interpolation-mode: bicubic; }\n\n/* prevent BG image flicker upon hover\n   (commented out as usage is rare, and the filter syntax messes with some pre-processors)\n.ie6 html {filter: expression(document.execCommand(\"BackgroundImageCache\", false, true));}\n*/\n/* let's clear some floats */\n.clearfix:after {\n  content: \" \";\n  display: block;\n  clear: both; }\n\n* {\n  font-family: 'Open Sans', sans-serif; }\n\n.main-width {\n  width: 100%;\n  max-width: 900px;\n  margin: 0 auto; }\n\n.shopping-cart {\n  position: relative; }\n  .shopping-cart .cart-info {\n    min-width: fit-content;\n    display: flex;\n    align-items: center;\n    font-size: 14px; }\n    .shopping-cart .cart-info div:not(.cart-icon) {\n      display: flex;\n      flex-direction: column; }\n      .shopping-cart .cart-info div:not(.cart-icon) span {\n        color: #008722;\n        margin: 0 0 0 auto; }\n    .shopping-cart .cart-info div:nth-of-type(2) {\n      margin: 0 0 0 10px; }\n      .shopping-cart .cart-info div:nth-of-type(2) span {\n        font-weight: 600; }\n    .shopping-cart .cart-info .cart-icon {\n      height: 40px;\n      width: 40px;\n      background: url(\"/FruitsAndVeggies/img/shop.svg\") no-repeat center;\n      margin: 0 0 0 20px;\n      cursor: pointer; }\n      .shopping-cart .cart-info .cart-icon:hover {\n        transform: scale(1.1); }\n  .shopping-cart .cart-container {\n    width: 320px;\n    height: 380px;\n    position: absolute;\n    background: white;\n    top: 55px;\n    right: 0;\n    -webkit-box-shadow: 1px 1px 5px 0 #858585;\n    -moz-box-shadow: 1px 1px 5px 0 #858585;\n    box-shadow: 1px 1px 5px 0 #858585;\n    padding: 15px;\n    display: flex;\n    flex-direction: column; }\n    .shopping-cart .cart-container::before {\n      content: '';\n      display: block;\n      position: absolute;\n      background: white;\n      height: 10px;\n      width: 10px;\n      transform: rotate(45deg);\n      top: -6px;\n      right: 15px;\n      -webkit-box-shadow: 1px 1px 5px 0 #858585;\n      -moz-box-shadow: 1px 1px 5px 0 #858585;\n      box-shadow: 1px 1px 5px 0 #858585; }\n    .shopping-cart .cart-container::after {\n      content: '';\n      display: block;\n      position: absolute;\n      background: white;\n      height: 10px;\n      width: 20px;\n      top: 0;\n      right: 10px; }\n    .shopping-cart .cart-container .cart-items {\n      overflow: auto;\n      height: calc(100% - 40px); }\n    .shopping-cart .cart-container input {\n      height: 40px;\n      width: 100%;\n      background: #eaa833;\n      border: none;\n      color: white; }\n\n.search-area {\n  position: relative;\n  display: flex;\n  align-items: center; }\n  .search-area .text-input {\n    height: 35px;\n    width: 350px;\n    border: 2px solid #008722;\n    padding: 0 0 0 10px; }\n  .search-area div {\n    height: 35px;\n    width: 90px;\n    background: #008722 url(\"/FruitsAndVeggies/img/search.svg\") no-repeat center;\n    background-size: 20px 20px;\n    border: none; }\n\nheader {\n  position: fixed;\n  top: 0;\n  width: 100%;\n  background: white;\n  z-index: 1;\n  -webkit-box-shadow: 0 2px 5px 0 #C7C7C7;\n  -moz-box-shadow: 0 2px 5px 0 #C7C7C7;\n  box-shadow: 0 2px 5px 0 #C7C7C7; }\n  header .main-width {\n    display: flex;\n    flex-direction: row;\n    align-items: center;\n    justify-content: space-between;\n    height: 100px; }\n  header .logo {\n    color: #008722;\n    font-size: 40px;\n    font-family: 'Rubik', sans-serif;\n    letter-spacing: 3px; }\n\n.item {\n  background: white;\n  flex-basis: 22%;\n  margin: 20px 4% 0 0;\n  padding: 0 0 15px 0;\n  display: flex;\n  flex-direction: column;\n  align-items: center; }\n  .item:nth-of-type(4n) {\n    margin: 20px 0 0 0; }\n  .item img {\n    height: 180px;\n    width: 180px;\n    margin: 0 0 10px 0; }\n  .item .item-name {\n    font-size: 14px;\n    margin: 0 0 5px 0; }\n  .item .item-price {\n    font-size: 20px;\n    font-weight: 600;\n    margin: 0 0 15px 0; }\n  .item .amount-area {\n    display: flex;\n    align-items: center;\n    margin: 0 0 15px 0; }\n    .item .amount-area input {\n      width: 60px;\n      height: 26px;\n      margin: 0 10px;\n      text-align: center; }\n    .item .amount-area button {\n      height: 26px;\n      width: 26px;\n      border-radius: 50%;\n      border: 1px solid grey;\n      background: white center no-repeat;\n      background-size: 13px 13px; }\n      .item .amount-area button:focus {\n        outline: none; }\n      .item .amount-area button.plus {\n        background-image: url(\"/FruitsAndVeggies/img/plus.svg\"); }\n      .item .amount-area button.minus {\n        background-image: url(\"/FruitsAndVeggies/img/minus.svg\"); }\n  .item .addToCart-btn {\n    height: 40px;\n    width: calc(100% - 30px);\n    background: #008722;\n    border: none;\n    color: #fff;\n    font-size: 16px; }\n\n.main-content {\n  margin: 100px 0 0 0;\n  background: #F1F1F1; }\n  .main-content .main-width {\n    min-height: calc(100vh - 150px); }\n  .main-content .items-container {\n    display: flex;\n    flex-flow: row wrap; }\n  .main-content .noMatch {\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    width: 100%; }\n    .main-content .noMatch img {\n      height: 500px;\n      margin: 40px 0; }\n    .main-content .noMatch div:nth-of-type(1) {\n      color: #727272;\n      font-size: 30px;\n      font-weight: 600;\n      margin: 0 0 20px 0; }\n    .main-content .noMatch div:nth-of-type(2) {\n      color: #a5a5a5; }\n\nfooter {\n  background: #F1F1F1; }\n  footer .main-width {\n    height: 50px;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    color: #727272;\n    font-size: 14px; }\n", ""]);
+exports.push([module.i, "/*\n\tHTML5 Reset :: style.css\n\t----------------------------------------------------------\n\tWe have learned much from/been inspired by/taken code where offered from:\n\tEric Meyer\t\t\t\t\t:: http://meyerweb.com\n\tHTML5 Doctor\t\t\t\t:: http://html5doctor.com\n\tand the HTML5 Boilerplate\t:: http://html5boilerplate.com\n-------------------------------------------------------------------------------*/\n/* Let's default this puppy out\n-------------------------------------------------------------------------------*/\nhtml, body, body div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, figure, footer, header, menu, nav, section, time, mark, audio, video, details, summary {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font-weight: normal;\n  vertical-align: baseline;\n  background: transparent; }\n\nmain, article, aside, figure, footer, header, nav, section, details, summary {\n  display: block; }\n\n/* Handle box-sizing while better addressing child elements:\n   http://css-tricks.com/inheriting-box-sizing-probably-slightly-better-best-practice/ */\nhtml {\n  box-sizing: border-box; }\n\n*,\n*:before,\n*:after {\n  box-sizing: inherit; }\n\n/* consider resetting the default cursor: https://gist.github.com/murtaugh/5247154 */\n/* Responsive images and other embedded objects */\n/* if you don't have full control over `img` tags (if you have to overcome attributes), consider adding height: auto */\nimg,\nobject,\nembed {\n  max-width: 100%; }\n\n/*\n   Note: keeping IMG here will cause problems if you're using foreground images as sprites.\n\tIn fact, it *will* cause problems with Google Maps' controls at small size.\n\tIf this is the case for you, try uncommenting the following:\n#map img {\n\t\tmax-width: none;\n}\n*/\n/* force a vertical scrollbar to prevent a jumpy page */\nhtml {\n  overflow-y: scroll; }\n\n/* we use a lot of ULs that aren't bulleted.\n\tyou'll have to restore the bullets within content,\n\twhich is fine because they're probably customized anyway */\nul {\n  list-style: none; }\n\nblockquote, q {\n  quotes: none; }\n\nblockquote:before,\nblockquote:after,\nq:before,\nq:after {\n  content: '';\n  content: none; }\n\na {\n  margin: 0;\n  padding: 0;\n  font-size: 100%;\n  vertical-align: baseline;\n  background: transparent; }\n\ndel {\n  text-decoration: line-through; }\n\nabbr[title], dfn[title] {\n  border-bottom: 1px dotted #000;\n  cursor: help; }\n\n/* tables still need cellspacing=\"0\" in the markup */\ntable {\n  border-collapse: separate;\n  border-spacing: 0; }\n\nth {\n  font-weight: bold;\n  vertical-align: bottom; }\n\ntd {\n  font-weight: normal;\n  vertical-align: top; }\n\nhr {\n  display: block;\n  height: 1px;\n  border: 0;\n  border-top: 1px solid #ccc;\n  margin: 1em 0;\n  padding: 0; }\n\ninput, select {\n  vertical-align: middle; }\n\npre {\n  white-space: pre;\n  /* CSS2 */\n  white-space: pre-wrap;\n  /* CSS 2.1 */\n  white-space: pre-line;\n  /* CSS 3 (and 2.1 as well, actually) */\n  word-wrap: break-word;\n  /* IE */ }\n\ninput[type=\"radio\"] {\n  vertical-align: text-bottom; }\n\ninput[type=\"checkbox\"] {\n  vertical-align: bottom; }\n\n.ie7 input[type=\"checkbox\"] {\n  vertical-align: baseline; }\n\n.ie6 input {\n  vertical-align: text-bottom; }\n\ntable {\n  font-size: inherit;\n  font: 100%; }\n\nsmall {\n  font-size: 85%; }\n\nstrong {\n  font-weight: bold; }\n\ntd, td img {\n  vertical-align: top; }\n\n/* Make sure sup and sub don't mess with your line-heights http://gist.github.com/413930 */\nsub, sup {\n  font-size: 75%;\n  line-height: 0;\n  position: relative; }\n\nsup {\n  top: -0.5em; }\n\nsub {\n  bottom: -0.25em; }\n\n/* standardize any monospaced elements */\npre, code, kbd, samp {\n  font-family: monospace, sans-serif; }\n\n/* hand cursor on clickable elements */\n.clickable,\nlabel,\ninput[type=button],\ninput[type=submit],\ninput[type=file],\nbutton {\n  cursor: pointer; }\n\n/* Webkit browsers add a 2px margin outside the chrome of form elements */\nbutton, input, select, textarea {\n  margin: 0; }\n\n/* make buttons play nice in IE */\nbutton,\ninput[type=button] {\n  width: auto;\n  overflow: visible; }\n\n/* scale images in IE7 more attractively */\n.ie7 img {\n  -ms-interpolation-mode: bicubic; }\n\n/* prevent BG image flicker upon hover\n   (commented out as usage is rare, and the filter syntax messes with some pre-processors)\n.ie6 html {filter: expression(document.execCommand(\"BackgroundImageCache\", false, true));}\n*/\n/* let's clear some floats */\n.clearfix:after {\n  content: \" \";\n  display: block;\n  clear: both; }\n\n* {\n  font-family: 'Open Sans', sans-serif; }\n\n.main-width {\n  width: 900px;\n  margin: 0 auto; }\n\n.cart-item {\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  margin: 0 0 15px 0; }\n  .cart-item:nth-of-type(1) {\n    padding: 15px 0 0 0; }\n  .cart-item img {\n    height: 45px;\n    width: 45px;\n    margin: 0 20px 0 0; }\n  .cart-item .item-name {\n    font-size: 12px;\n    color: #727272; }\n  .cart-item .item-price {\n    font-size: 16px;\n    font-weight: 600; }\n  .cart-item .amount-area {\n    display: flex;\n    align-items: center;\n    margin: 0 15px 0 auto; }\n    .cart-item .amount-area input {\n      width: 30px;\n      height: 24px;\n      margin: 0 7px;\n      text-align: center; }\n    .cart-item .amount-area button {\n      height: 24px;\n      width: 24px;\n      border-radius: 50%;\n      border: 1px solid grey;\n      background: white center no-repeat;\n      background-size: 10px 10px; }\n      .cart-item .amount-area button:focus {\n        outline: none; }\n      .cart-item .amount-area button.plus {\n        background-image: url(\"/FruitsAndVeggies/img/plus.svg\"); }\n      .cart-item .amount-area button.minus {\n        background-image: url(\"/FruitsAndVeggies/img/minus.svg\"); }\n  .cart-item .remove {\n    width: 20px;\n    height: 20px;\n    cursor: pointer;\n    background: no-repeat center url(\"/FruitsAndVeggies/img/remove.svg\");\n    background-size: 10px 10px; }\n    .cart-item .remove:hover {\n      background: no-repeat center url(\"/FruitsAndVeggies/img/removeRed.svg\");\n      background-size: 10px 10px; }\n\n.cart-box {\n  display: flex;\n  flex-direction: column;\n  width: 340px;\n  height: 380px;\n  position: absolute;\n  background: white;\n  top: 55px;\n  right: 0;\n  -webkit-box-shadow: 1px 1px 5px 0 #858585;\n  -moz-box-shadow: 1px 1px 5px 0 #858585;\n  box-shadow: 1px 1px 5px 0 #858585; }\n  .cart-box::before {\n    content: '';\n    display: block;\n    position: absolute;\n    background: white;\n    height: 10px;\n    width: 10px;\n    transform: rotate(45deg);\n    top: -6px;\n    right: 15px;\n    -webkit-box-shadow: 1px 1px 5px 0 #858585;\n    -moz-box-shadow: 1px 1px 5px 0 #858585;\n    box-shadow: 1px 1px 5px 0 #858585; }\n  .cart-box::after {\n    content: '';\n    display: block;\n    position: absolute;\n    background: white;\n    height: 10px;\n    width: 20px;\n    top: 0;\n    right: 10px; }\n  .cart-box .cart-items {\n    overflow: auto;\n    height: calc(100% - 40px);\n    padding: 0 15px 0 10px; }\n  .cart-box > input {\n    height: 40px;\n    width: calc(100% - 30px);\n    margin: 0 15px 15px 15px;\n    font-size: 16px;\n    background: #eaa833;\n    border: none;\n    color: white; }\n\n::-webkit-scrollbar {\n  width: 5px; }\n\n::-webkit-scrollbar-track {\n  background: white; }\n\n::-webkit-scrollbar-thumb {\n  background: #888; }\n\n::-webkit-scrollbar-thumb:hover {\n  background: #555; }\n\n.shopping-cart {\n  position: relative;\n  margin: 0 0 0 auto;\n  display: flex;\n  align-items: center;\n  font-size: 14px; }\n  .shopping-cart .cart-info {\n    display: flex;\n    flex-direction: column;\n    width: max-content; }\n    .shopping-cart .cart-info span {\n      color: #008722;\n      margin: 0 0 0 auto; }\n    .shopping-cart .cart-info:nth-of-type(2) {\n      width: 45px; }\n      .shopping-cart .cart-info:nth-of-type(2) span {\n        font-weight: 600; }\n  .shopping-cart .cart-icon {\n    height: 40px;\n    width: 40px;\n    border: none;\n    outline: none;\n    background: url(\"/FruitsAndVeggies/img/shop.svg\") no-repeat center;\n    margin: 0 0 0 20px;\n    cursor: pointer; }\n    .shopping-cart .cart-icon:hover {\n      transform: scale(1.1); }\n  .shopping-cart .cart-icon:focus ~ .cart-box, .shopping-cart .cart-box:hover {\n    display: flex; }\n\n.search-area {\n  position: relative;\n  display: flex;\n  align-items: center; }\n  .search-area .text-input {\n    height: 35px;\n    width: 350px;\n    border: 2px solid #008722;\n    padding: 0 0 0 10px;\n    font-size: 14px;\n    outline: none; }\n  .search-area div {\n    height: 35px;\n    width: 90px;\n    background: #008722 url(\"/FruitsAndVeggies/img/search.svg\") no-repeat center;\n    background-size: 20px 20px;\n    border: none; }\n\nheader {\n  position: fixed;\n  top: 0;\n  width: 100%;\n  background: white;\n  z-index: 1;\n  -webkit-box-shadow: 0 2px 5px 0 #C7C7C7;\n  -moz-box-shadow: 0 2px 5px 0 #C7C7C7;\n  box-shadow: 0 2px 5px 0 #C7C7C7; }\n  header .main-width {\n    display: flex;\n    flex-direction: row;\n    align-items: center;\n    height: 100px; }\n  header .logo {\n    color: #008722;\n    font-size: 40px;\n    font-family: 'Rubik', sans-serif;\n    letter-spacing: 3px;\n    margin: 0 50px 0 0; }\n\n.item {\n  background: white;\n  flex-basis: 22%;\n  margin: 20px 4% 0 0;\n  padding: 0 0 15px 0;\n  display: flex;\n  flex-direction: column;\n  align-items: center; }\n  .item:nth-of-type(4n) {\n    margin: 20px 0 0 0; }\n  .item img {\n    height: 180px;\n    width: 180px;\n    margin: 0 0 10px 0; }\n  .item .item-name {\n    font-size: 14px;\n    margin: 0 0 5px 0; }\n  .item .item-price {\n    font-size: 20px;\n    font-weight: 600;\n    margin: 0 0 15px 0; }\n  .item .amount-area {\n    display: flex;\n    align-items: center;\n    margin: 0 0 15px 0; }\n    .item .amount-area input {\n      width: 60px;\n      height: 26px;\n      margin: 0 10px;\n      text-align: center; }\n    .item .amount-area button {\n      height: 26px;\n      width: 26px;\n      border-radius: 50%;\n      border: 1px solid grey;\n      background: white center no-repeat;\n      background-size: 13px 13px; }\n      .item .amount-area button:focus {\n        outline: none; }\n      .item .amount-area button.plus {\n        background-image: url(\"/FruitsAndVeggies/img/plus.svg\"); }\n      .item .amount-area button.minus {\n        background-image: url(\"/FruitsAndVeggies/img/minus.svg\"); }\n  .item .addToCart-btn {\n    height: 40px;\n    width: calc(100% - 30px);\n    background: #008722;\n    border: none;\n    color: #fff;\n    font-size: 16px; }\n\n.main-content {\n  margin: 100px 0 0 0;\n  background: #F1F1F1; }\n  .main-content .main-width {\n    min-height: calc(100vh - 150px); }\n  .main-content .items-container {\n    display: flex;\n    flex-flow: row wrap; }\n  .main-content .noMatch {\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    width: 100%; }\n    .main-content .noMatch img {\n      height: 500px;\n      margin: 40px 0; }\n    .main-content .noMatch div:nth-of-type(1) {\n      color: #727272;\n      font-size: 30px;\n      font-weight: 600;\n      margin: 0 0 20px 0; }\n    .main-content .noMatch div:nth-of-type(2) {\n      color: #a5a5a5; }\n\nfooter {\n  background: #F1F1F1; }\n  footer .main-width {\n    height: 50px;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    color: #727272;\n    font-size: 14px; }\n", ""]);
 
 // exports
 
@@ -22881,7 +22954,12 @@ var Header = function (_React$Component) {
                         'Veggy'
                     ),
                     _react2.default.createElement(_search2.default, { text: this.props.text, handleText: this.props.handleText }),
-                    _react2.default.createElement(_cart2.default, { cart: this.props.cart })
+                    _react2.default.createElement(_cart2.default, { cart: this.props.cart,
+                        subTotal: this.props.subTotal,
+                        handleMinus: this.props.handleMinus,
+                        handlePlus: this.props.handlePlus,
+                        handleChange: this.props.handleChange,
+                        removeItem: this.props.removeItem })
                 )
             );
         }
@@ -22963,6 +23041,10 @@ var _react = __webpack_require__(14);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _cartBox = __webpack_require__(197);
+
+var _cartBox2 = _interopRequireDefault(_cartBox);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -22986,40 +23068,9 @@ var Cart = function (_React$Component) {
         }
 
         return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Cart.__proto__ || Object.getPrototypeOf(Cart)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
-            menuDisplay: 'off'
+            display: 'none'
         }, _this.handleClick = function () {
-            if (_this.state.menuDisplay.indexOf('on') === -1) {
-                _this.setState({ menuDisplay: 'on' });
-            } else {
-                _this.setState({ menuDisplay: 'off' });
-            }
-        }, _this.addToCart = function () {
-            if (typeof _this.props.cart === 'undefined') {
-                return null;
-            }
-
-            return _this.props.cart.map(function (item) {
-                return _react2.default.createElement(
-                    'div',
-                    { key: item.name },
-                    _react2.default.createElement(
-                        'div',
-                        null,
-                        item.name
-                    ),
-                    _react2.default.createElement(
-                        'div',
-                        null,
-                        item.amount
-                    )
-                );
-            });
-        }, _this.countTotal = function () {
-            var total = 0;
-            _this.props.cart.forEach(function (item) {
-                total += item.amount * parseFloat(item.price);
-            });
-            return Math.round(total * 100) / 100;
+            _this.state.display === 'none' ? _this.setState({ display: 'flex' }) : _this.setState({ display: 'none' });
         }, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
@@ -23033,42 +23084,38 @@ var Cart = function (_React$Component) {
                     'div',
                     { className: 'cart-info' },
                     _react2.default.createElement(
-                        'div',
+                        'span',
                         null,
-                        _react2.default.createElement(
-                            'span',
-                            null,
-                            'No. of items :'
-                        ),
-                        _react2.default.createElement(
-                            'span',
-                            null,
-                            'Sub Total :'
-                        )
+                        'No. of items :'
                     ),
                     _react2.default.createElement(
-                        'div',
+                        'span',
                         null,
-                        _react2.default.createElement(
-                            'span',
-                            null,
-                            this.props.cart.length
-                        ),
-                        _react2.default.createElement(
-                            'span',
-                            null,
-                            this.countTotal()
-                        )
-                    ),
-                    _react2.default.createElement('div', { className: 'cart-icon', onClick: this.handleClick })
+                        'Sub Total :'
+                    )
                 ),
                 _react2.default.createElement(
                     'div',
-                    { className: 'cart-container',
-                        style: this.state.menuDisplay === 'on' ? { display: 'block' } : { display: 'none' } },
-                    this.addToCart(),
-                    _react2.default.createElement('input', { type: 'submit', value: 'PROCEED TO CHECKOUT' })
-                )
+                    { className: 'cart-info' },
+                    _react2.default.createElement(
+                        'span',
+                        null,
+                        this.props.cart.length
+                    ),
+                    _react2.default.createElement(
+                        'span',
+                        null,
+                        this.props.subTotal
+                    )
+                ),
+                _react2.default.createElement('button', { className: 'cart-icon', onClick: this.handleClick }),
+                _react2.default.createElement(_cartBox2.default, { cart: this.props.cart,
+                    subTotal: this.props.subTotal,
+                    handleMinus: this.props.handleMinus,
+                    handlePlus: this.props.handlePlus,
+                    handleChange: this.props.handleChange,
+                    removeItem: this.props.removeItem,
+                    display: this.state.display })
             );
         }
     }]);
@@ -23190,7 +23237,11 @@ var Content = function (_React$Component) {
 
             this.props.products.forEach(function (i) {
                 if (i.name.toLowerCase().indexOf(text) !== -1) {
-                    items.push(_react2.default.createElement(_item2.default, { name: i.name, price: i.price, src: i.src, key: i.id, sendToCart: _this2.props.sendToCart }));
+                    items.push(_react2.default.createElement(_item2.default, { name: i.name,
+                        price: i.price,
+                        src: i.src,
+                        key: i.id,
+                        sendToCart: _this2.props.sendToCart }));
                 }
             });
 
@@ -23293,14 +23344,14 @@ var Item = function (_React$Component) {
             _this.setState({ amount: ++currAmount });
         }, _this.handleChange = function (ev) {
             _this.setState({ amount: ev.target.value });
+        }, _this.handleClick = function () {
+            _this.props.sendToCart(_this.props.name, _this.state.amount, _this.props.price, _this.props.src);
         }, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
     _createClass(Item, [{
         key: 'render',
         value: function render() {
-            var _this2 = this;
-
             return _react2.default.createElement(
                 'div',
                 { className: 'item' },
@@ -23326,9 +23377,7 @@ var Item = function (_React$Component) {
                 _react2.default.createElement(
                     'button',
                     { className: 'addToCart-btn',
-                        onClick: function onClick() {
-                            return _this2.props.sendToCart(_this2.props.name, _this2.state.amount, _this2.props.price);
-                        },
+                        onClick: this.handleClick,
                         'data-name': this.props.name },
                     'ADD TO CART'
                 )
@@ -23340,6 +23389,173 @@ var Item = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = Item;
+
+/***/ }),
+/* 195 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(14);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var CartItem = function (_React$Component) {
+    _inherits(CartItem, _React$Component);
+
+    function CartItem() {
+        _classCallCheck(this, CartItem);
+
+        return _possibleConstructorReturn(this, (CartItem.__proto__ || Object.getPrototypeOf(CartItem)).apply(this, arguments));
+    }
+
+    _createClass(CartItem, [{
+        key: 'render',
+        value: function render() {
+            var _this2 = this;
+
+            return _react2.default.createElement(
+                'div',
+                { className: 'cart-item' },
+                _react2.default.createElement('img', { src: this.props.src }),
+                _react2.default.createElement(
+                    'div',
+                    null,
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'item-name' },
+                        this.props.name
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'item-price' },
+                        this.props.price,
+                        ' PLN'
+                    )
+                ),
+                _react2.default.createElement(
+                    'div',
+                    { className: 'amount-area' },
+                    _react2.default.createElement('button', { className: 'minus', onClick: function onClick() {
+                            return _this2.props.handleMinus(_this2.props.name);
+                        } }),
+                    _react2.default.createElement('input', { value: this.props.amount, onChange: function onChange(ev) {
+                            return _this2.props.handleChange(ev, _this2.props.name);
+                        } }),
+                    _react2.default.createElement('button', { className: 'plus', onClick: function onClick() {
+                            return _this2.props.handlePlus(_this2.props.name);
+                        } })
+                ),
+                _react2.default.createElement('div', { className: 'remove', onClick: function onClick() {
+                        return _this2.props.removeItem(_this2.props.name);
+                    } })
+            );
+        }
+    }]);
+
+    return CartItem;
+}(_react2.default.Component);
+
+exports.default = CartItem;
+
+/***/ }),
+/* 196 */,
+/* 197 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(14);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _cartItem = __webpack_require__(195);
+
+var _cartItem2 = _interopRequireDefault(_cartItem);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var CartBox = function (_React$Component) {
+    _inherits(CartBox, _React$Component);
+
+    function CartBox() {
+        var _ref;
+
+        var _temp, _this, _ret;
+
+        _classCallCheck(this, CartBox);
+
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = CartBox.__proto__ || Object.getPrototypeOf(CartBox)).call.apply(_ref, [this].concat(args))), _this), _this.addToCart = function () {
+            if (typeof _this.props.cart === 'undefined') {
+                return null;
+            }
+
+            return _this.props.cart.map(function (item) {
+                return _react2.default.createElement(_cartItem2.default, { name: item.name,
+                    price: item.price,
+                    amount: item.amount,
+                    src: item.src,
+                    key: item.name,
+                    handleMinus: _this.props.handleMinus,
+                    handlePlus: _this.props.handlePlus,
+                    handleChange: _this.props.handleChange,
+                    removeItem: _this.props.removeItem });
+            });
+        }, _temp), _possibleConstructorReturn(_this, _ret);
+    }
+
+    _createClass(CartBox, [{
+        key: 'render',
+        value: function render() {
+            return _react2.default.createElement(
+                'div',
+                { className: 'cart-box', style: { display: this.props.display } },
+                _react2.default.createElement(
+                    'div',
+                    { className: 'cart-items' },
+                    this.addToCart()
+                ),
+                _react2.default.createElement('input', { type: 'submit', value: 'PROCEED TO CHECKOUT' })
+            );
+        }
+    }]);
+
+    return CartBox;
+}(_react2.default.Component);
+
+exports.default = CartBox;
 
 /***/ })
 /******/ ]);

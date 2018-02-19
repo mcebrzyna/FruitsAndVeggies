@@ -1,0 +1,62 @@
+.cart-item{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0 0 15px 0;
+  &:nth-of-type(1){
+   padding: 15px 0 0 0;
+  }
+
+  img{
+    height: 45px;
+    width: 45px;
+    margin: 0 20px 0 0;
+  }
+  .item-name{
+    font-size: 12px;
+    color: darken($second-color, 50%);
+  }
+  .item-price{
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .amount-area{
+    display: flex;
+    align-items: center;
+    margin: 0 15px 0 auto;
+    input{
+      width: 30px;
+      height: 24px;
+      margin: 0 7px;
+      text-align: center;
+    }
+    button{
+      height: 24px;
+      width: 24px;
+      border-radius: 50%;
+      border: 1px solid grey;
+      background: white center no-repeat;
+      background-size: 10px 10px;
+      &:focus{
+        outline: none
+      }
+      &.plus{
+        background-image: url("/FruitsAndVeggies/img/plus.svg");
+      }
+      &.minus{
+        background-image: url("/FruitsAndVeggies/img/minus.svg");
+      }
+    }
+  }
+  .remove{
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    background: no-repeat center url("/FruitsAndVeggies/img/remove.svg");
+    background-size: 10px 10px;
+    &:hover{
+      background: no-repeat center url("/FruitsAndVeggies/img/removeRed.svg");
+      background-size: 10px 10px;
+    }
+  }
+}

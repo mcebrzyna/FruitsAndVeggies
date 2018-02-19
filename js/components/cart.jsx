@@ -1,61 +1,36 @@
 import React from 'react';
+import CartBox from './cartBox.jsx';
 
 class Cart extends React.Component{
-    state = {
-        menuDisplay: 'off',
+    state={
+        display: 'none',
     };
 
-    handleClick = () =>{
-        if(this.state.menuDisplay.indexOf('on') === -1){
-            this.setState( { menuDisplay: 'on',} );
-        }
-        else {
-            this.setState( {menuDisplay: 'off',} );
-        }
-    };
-
-    addToCart = () => {
-        if(typeof this.props.cart === 'undefined'){
-            return null;
-        }
-
-        return this.props.cart.map(item => {
-            return (
-                <div key={item.name}>
-                    <div>{item.name}</div>
-                    <div>{item.amount}</div>
-                </div>
-            )
-        });
-    };
-
-    countTotal = () => {
-        let total = 0;
-        this.props.cart.forEach(item => {
-            total += item.amount * parseFloat(item.price);
-        });
-        return Math.round(total * 100) / 100;
+    handleClick = () => {
+        this.state.display === 'none'?
+            this.setState( {display: 'flex'} ):
+            this.setState( {display: 'none'} );
     };
 
     render(){
         return (
             <div className='shopping-cart'>
                 <div className='cart-info'>
-                    <div>
-                        <span>No. of items :</span>
-                        <span>Sub Total :</span>
-                    </div>
-                    <div>
-                        <span>{this.props.cart.length}</span>
-                        <span>{this.countTotal()}</span>
-                    </div>
-                    <div className='cart-icon' onClick={this.handleClick}/>
+                    <span>No. of items :</span>
+                    <span>Sub Total :</span>
                 </div>
-                <div className='cart-container'
-                     style={this.state.menuDisplay === 'on'? {display: 'block'} : {display: 'none'}}>
-                    {this.addToCart()}
-                    <input type="submit" value='PROCEED TO CHECKOUT'/>
+                <div className='cart-info'>
+                    <span>{this.props.cart.length}</span>
+                    <span>{this.props.subTotal}</span>
                 </div>
+                <button className='cart-icon' onClick={this.handleClick}/>
+                <CartBox cart={this.props.cart}
+                               subTotal={this.props.subTotal}
+                               handleMinus={this.props.handleMinus}
+                               handlePlus={this.props.handlePlus}
+                               handleChange={this.props.handleChange}
+                               removeItem={this.props.removeItem}
+                               display={this.state.display}/>
             </div>
         )
     }

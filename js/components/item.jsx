@@ -21,6 +21,10 @@ class Item extends React.Component{
         this.setState({amount: ev.target.value})
     };
 
+    handleClick = () => {
+        this.props.sendToCart(this.props.name, this.state.amount, this.props.price, this.props.src);
+    };
+
     render(){
         return (
             <div className='item'>
@@ -33,7 +37,7 @@ class Item extends React.Component{
                     <button className='plus' onClick={this.handlePlus}/>
                 </div>
                 <button className='addToCart-btn'
-                        onClick={() => this.props.sendToCart(this.props.name, this.state.amount, this.props.price)}
+                        onClick={this.handleClick}
                         data-name={this.props.name}>ADD TO CART</button>
             </div>
         )
