@@ -9647,7 +9647,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 args[_key] = arguments[_key];
             }
 
-            return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = App.__proto__ || Object.getPrototypeOf(App)).call.apply(_ref, [this].concat(args))), _this), _this.url = 'http://localhost:3000/products', _this.state = {
+            return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = App.__proto__ || Object.getPrototypeOf(App)).call.apply(_ref, [this].concat(args))), _this), _this.url = '/FruitsAndVeggies/db1.json', _this.state = {
                 products: null,
                 text: '',
                 cart: [],

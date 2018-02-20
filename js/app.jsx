@@ -8,7 +8,7 @@ import Content from './components/content.jsx'
 document.addEventListener('DOMContentLoaded', function () {
 
     class App extends React.Component{
-        url = 'http://localhost:3000/products';
+        url = '/FruitsAndVeggies/db1.json';
         state = {
             products: null,
             text: '',
