@@ -3,18 +3,20 @@
   flex-basis: 22%;
   margin: 20px 4% 0 0;
   padding: 0 0 15px 0;
-
   display: flex;
   flex-direction: column;
   align-items: center;
   &:nth-of-type(4n){
     margin:20px 0 0 0;
   }
-
-  img{
+  > img{
     height: 180px;
     width: 180px;
-    margin: 0 0 10px 0;
+    margin: 10px 0 15px 0;
+    cursor: zoom-in;
+    &:hover{
+      transform: scale(1.1);
+    }
   }
   .item-name{
     font-size: 14px;
@@ -60,5 +62,66 @@
     border: none;
     color: #fff;
     font-size: 16px;
+    outline: none;
+    &:hover{
+      background: lighten($main-color, 5%)
+    }
+    &:active{
+      background: lighten($main-color, 10%)
+    }
+  }
+  &:hover{
+    -webkit-box-shadow: 0 0 25px 0 #C7C7C7;
+    -moz-box-shadow: 0 0 25px 0 #C7C7C7;
+    box-shadow: 0 0 25px 0 #C7C7C7;
+  }
+}
+
+.zoom{
+  position: fixed;
+  height: calc(100% + 100px);
+  width: 100%;
+  top: -100px;
+  left: 0;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  > div{
+    background: white;
+    position: relative;
+    padding: 15px;
+    width: min-content;
+    img{
+      width: 500px;
+      height: 500px;
+      cursor: zoom-out;
+    }
+    div{
+      display: flex;
+      margin: 20px 0 0 0;
+      span:nth-of-type(2){
+        margin: 0 0 0 auto;
+        color: $main-color;
+        font-size: 20px;
+        font-weight: 600;
+      }
+    }
+    button{
+      position: absolute;
+      right: 0;
+      top: 0;
+      border: none;
+      width: 30px;
+      height: 30px;
+      background: url("/FruitsAndVeggies/img/removeWhite.svg") no-repeat center;
+      background-color: $main-color;
+      background-size: 10px 10px;
+      outline: none;
+      &:hover{
+        background-color: lighten($main-color, 5%);
+      }
+    }
   }
 }
