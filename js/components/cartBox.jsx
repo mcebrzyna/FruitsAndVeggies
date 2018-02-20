@@ -7,6 +7,10 @@ class CartBox extends React.Component{
             return null;
         }
 
+        if(this.props.cart.length === 0){
+            return <div className='no-items'>No items in cart.</div>
+        }
+
         return this.props.cart.map(item => {
             return <CartItem name={item.name}
                              price={item.price}

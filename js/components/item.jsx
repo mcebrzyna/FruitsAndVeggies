@@ -4,10 +4,11 @@ class Item extends React.Component{
     state= {
         amount: 1,
         zoom: false,
+        opacity: 0,
     };
 
     componentDidMount() {
-
+        this.opacity()
     }
 
     handleMinus = () => {
@@ -52,9 +53,22 @@ class Item extends React.Component{
         return null;
     };
 
+    opacity = () => {
+      let counter = 0;
+      let timer = setInterval( () => {
+          if(counter !== 20){
+              let old = this.state.opacity;
+              this.setState( {opacity: old + 0.05}, () => counter++ )
+          }
+          else{
+              clearInterval(timer)
+          }
+      }, 20)
+    };
+
     render(){
         return (
-            <div className='item'>
+            <div className='item' style={{opacity: this.state.opacity}}>
                 <img src={this.props.src} onClick={this.zoomClick}/>
                 <div className='item-name'>{this.props.name}</div>
                 <div className='item-price'>{this.props.price} PLN</div>

@@ -50,6 +50,13 @@
     border: none;
     color: white;
   }
+  .no-items{
+    color: darken($second-color, 30%);
+    font-size: 20px;
+    width: 100%;
+    text-align: center;
+    margin: 50% 0 0 0;
+  }
 
 }
 ::-webkit-scrollbar {
